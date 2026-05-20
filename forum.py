@@ -3,7 +3,6 @@ from PySide6.QtCore import Qt, QDate
 
 import main as mn
 import sys
-
 # For heatmap
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -124,24 +123,21 @@ class MainWindow(QMainWindow):
         # Right now should be 15%-60%(y-axis range)
         volatility = mn.np.round(mn.np.linspace(0.6, 0.15, 10), 2)    # 10 volatility levels
 
-        # Has to get calcualted at runtime
-        # Range of the stock prices +10 each interval
         # Creates 11 element NDArray with the middle value being current_price
         stock_price = mn.np.round(mn.np.linspace(lower_bound_price, upper_bound_price, 11),2)
 
         stock_price_list = stock_price.tolist()
         volatility_list = volatility.tolist()
 
-        # This creates a 10x10 - rowsxcol
-        # random 2d array(need to make the actual data)
+        # This creates a 10x11 - rows & col
+        #2d array
         # y - rows, x - col
         array = [[0 for _ in range(HEAT_MAP_SIZE_X)] for _ in range(HEAT_MAP_SIZE_Y)]
 
-        # a cell is determined by the stock price and violtility (x,y)
+        # a cell is determined by the stock price and violtility value = (x,y)
         # Assign values
         for i in range(HEAT_MAP_SIZE_Y):
             for j in range(HEAT_MAP_SIZE_X):
-                #assign
                 array[i][j] = mn.quickTheoreticalFairValue(intrestRateTicker, stock_price_list[j], volatility_list[i], strikePrice, duration, call_option)
 
         heatmap_data = pd.DataFrame(array, index=volatility, columns=stock_price)
